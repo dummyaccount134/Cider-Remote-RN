@@ -5,7 +5,7 @@ import { useAtom } from "jotai";
 import { useEffect, useMemo, useState } from "react";
 import { Animated, ScrollView, StyleSheet, View } from "react-native";
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
-import { Button, Dialog, List, Portal, Text, useTheme } from "react-native-paper";
+import { Button, Dialog, IconButton, List, Portal, Text, useTheme } from "react-native-paper";
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Queue() {
@@ -63,6 +63,7 @@ type UIQueueItemProps = {
 function UIQueueItem({ item, idx, isDragged, onDragStart, onDragEnd }: UIQueueItemProps) {
   const [queue, setQueue] = useAtom(queueItems);
   const [showActions, setShowActions] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const theme = useTheme();
   const translateY = new Animated.Value(0);
   const scale = new Animated.Value(1);
@@ -80,18 +81,19 @@ function UIQueueItem({ item, idx, isDragged, onDragStart, onDragEnd }: UIQueueIt
 
   const onHandlerStateChange = (event: any) => {
     if (event.nativeEvent.state === State.BEGAN) {
-      onDragStart?.(); queueItems
+      setIsDragging(true);
+      onDragStart?.();
       Animated.spring(scale, {
         toValue: 1.05,
         useNativeDriver: true,
       }).start();
-    } else if (event.nativeEvent.state === State.END) {
+    } else if (event.nativeEvent.state === State.END || event.nativeEvent.state === State.CANCELLED) {
       const { translationY } = event.nativeEvent;
       const itemHeight = 80; // Approximate height of each item
       const moveDistance = Math.round(translationY / itemHeight);
       const newIndex = Math.max(0, Math.min(idx + moveDistance, queue.length - 1));
 
-      if (newIndex !== idx) {
+      if (newIndex !== idx && event.nativeEvent.state === State.END) {
         moveToPosition(idx, newIndex);
       }
 
@@ -105,6 +107,11 @@ function UIQueueItem({ item, idx, isDragged, onDragStart, onDragEnd }: UIQueueIt
           useNativeDriver: true,
         }),
       ]).start();
+
+      // Delay resetting isDragging to prevent menu from showing
+      setTimeout(() => {
+        setIsDragging(false);
+      }, 100);
 
       onDragEnd?.();
     }
@@ -132,9 +139,6 @@ function UIQueueItem({ item, idx, isDragged, onDragStart, onDragEnd }: UIQueueIt
             onPress={() => {
               changeToIndex(idx);
             }}
-            onLongPress={() => {
-              setShowActions(true);
-            }}
             left={(props) =>
               item.attributes.artwork?.url ? (
                 <List.Image
@@ -147,7 +151,9 @@ function UIQueueItem({ item, idx, isDragged, onDragStart, onDragEnd }: UIQueueIt
               )
             }
             right={(props) => (
-              <List.Icon {...props} icon="drag" style={styles.dragHandle} />
+              <IconButton icon="menu" onPress={() => {
+                setShowActions(true);
+              }} {...props} style={styles.dragHandle} />
             )}
             titleStyle={styles.title}
             descriptionStyle={[styles.description, { color: theme.colors.onSurfaceVariant }]}

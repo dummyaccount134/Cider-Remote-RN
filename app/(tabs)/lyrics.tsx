@@ -46,7 +46,8 @@ export function LyricsView() {
         setLoading(true);
         setLyrics(null);
         try {
-            const lines = await getLyrics(nowPlaying.playParams.id);
+            console.log(nowPlaying.playParams)
+            const lines = await getLyrics(nowPlaying.playParams.catalogId || nowPlaying.playParams.id);
             setLyrics(lines);
             setCurrentIndex(-1);
         } catch (error) {

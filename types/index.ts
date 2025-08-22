@@ -47,6 +47,7 @@ export type NowPlayingAttributes = {
   isrc: string;
   name: string;
   playParams: {
+    catalogId: string;
     id: string;
     kind: string;
   };
