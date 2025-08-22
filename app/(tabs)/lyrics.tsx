@@ -144,9 +144,10 @@ export function LyricsView() {
     useEffect(() => {
         if (!lyrics) return;
         lyrics.forEach((_, i) => {
-            Animated.timing(animatedScales.current[i], {
+            Animated.spring(animatedScales.current[i], {
                 toValue: i === currentIndex ? 1 : 0.8,
-                duration: 250,
+                friction: 6,
+                tension: 120,
                 useNativeDriver: true,
             }).start();
         });
