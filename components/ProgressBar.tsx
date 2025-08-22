@@ -68,6 +68,7 @@ export function ProgressBar() {
           onSlidingComplete={handleSlidingComplete}
           minimumTrackTintColor={theme.colors.primary}
           maximumTrackTintColor={theme.colors.outline}
+          thumbTintColor={theme.colors.primary}
         />
       </View>
       <View style={styles.timeContainer}>

@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     lyricLine: {
-        marginVertical: 32,
+        marginVertical: 24,
         textAlign: "left",
         fontWeight: "800",
     },

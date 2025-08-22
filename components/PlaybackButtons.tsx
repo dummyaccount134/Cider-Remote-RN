@@ -3,6 +3,7 @@ import { useAtomValue } from "jotai";
 import { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { IconButton, useTheme } from "react-native-paper";
+import { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 
 export function PlaybackButtons() {
   const isPlaying = useAtomValue(isPlayingAtom);
@@ -33,14 +34,13 @@ export function PlaybackButtons() {
   };
 
   const repeatIcon = useMemo(() => {
-    if(repeatMode == 0) {
-      return 'repeat';
-    }
-    if(repeatMode == 1) {
-      return 'repeat-once';
-    }
-    if(repeatMode == 2) {
-      return 'repeat'
+    switch (repeatMode) {
+      case 1:
+      return 'repeat-once' as IconSource;
+      case 2:
+      return 'repeat' as IconSource;
+      default:
+      return 'repeat' as IconSource;
     }
   }, [repeatMode])
 
