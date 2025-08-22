@@ -57,6 +57,17 @@ export default function TabLayout() {
         headerShown: false,
         freezeOnBlur: true,
         animation: 'shift',
+        transitionSpec: {
+          animation: 'spring',
+          config: {
+            stiffness: 1000,
+            damping: 500,
+            mass: 3,
+            overshootClamping: true,
+            restDisplacementThreshold: 0.01,
+            restSpeedThreshold: 0.01,
+          },
+        },
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect
