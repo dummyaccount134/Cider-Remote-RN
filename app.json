@@ -18,8 +18,10 @@
       },
       "edgeToEdgeEnabled": true,
       "permissions": [
+        "INTERNET",
         "INTERNET"
-      ]
+      ],
+      "package": "com.anonymous.ciderremoteapp"
     },
     "web": {
       "bundler": "metro",
