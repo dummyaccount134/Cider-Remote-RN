@@ -6,7 +6,8 @@ import { HapticTab } from "@/components/HapticTab";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { Icon } from "react-native-paper";
+import { CommonActions } from "@react-navigation/native";
+import { BottomNavigation, Icon } from "react-native-paper";
 
 
 export default function TabLayout() {
@@ -14,6 +15,46 @@ export default function TabLayout() {
 
   return (
     <Tabs
+      tabBar={({ navigation, state, descriptors, insets }) => (
+        <BottomNavigation.Bar
+          navigationState={state}
+          safeAreaInsets={insets}
+          onTabPress={({ route, preventDefault }) => {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
+
+            if (event.defaultPrevented) {
+              preventDefault();
+            } else {
+              navigation.dispatch({
+                ...CommonActions.navigate(route.name, route.params),
+                target: state.key,
+              });
+            }
+          }}
+          renderIcon={({ route, focused, color }) =>
+            descriptors[route.key].options.tabBarIcon?.({
+              focused,
+              color,
+              size: 24,
+            }) || null
+          }
+          getLabelText={({ route }) => {
+            const { options } = descriptors[route.key];
+            const label =
+              typeof options.tabBarLabel === 'string'
+                ? options.tabBarLabel
+                : typeof options.title === 'string'
+                  ? options.title
+                  : route.name;
+
+            return label;
+          }}
+        />
+      )}
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         headerShown: false,
@@ -35,7 +76,7 @@ export default function TabLayout() {
         options={{
           title: "Now Playing",
           tabBarIcon: ({ color }) => (
-            <Icon size={28} source="play-circle-outline" color={color} />
+            <Icon size={24} source="play-circle-outline" color={color} />
           ),
           animation: "shift",
         }}
@@ -46,7 +87,7 @@ export default function TabLayout() {
         options={{
           title: "Lyrics",
           tabBarIcon: ({ color }) => (
-            <Icon size={28} source="comment-processing-outline" color={color} />
+            <Icon size={24} source="comment-processing-outline" color={color} />
           ),
         }}
       />
@@ -56,7 +97,7 @@ export default function TabLayout() {
         options={{
           title: "Queue",
           tabBarIcon: ({ color }) => (
-            <Icon size={28} source="format-list-bulleted" color={color} />
+            <Icon size={24} source="format-list-bulleted" color={color} />
           ),
           animation: "shift",
         }}
@@ -67,7 +108,7 @@ export default function TabLayout() {
         options={{
           title: "Search",
           tabBarIcon: ({ color }) => (
-            <Icon size={28} source="magnify" color={color} />
+            <Icon size={24} source="magnify" color={color} />
           ),
           animation: "shift",
         }}
@@ -78,7 +119,7 @@ export default function TabLayout() {
         options={{
           title: "Library",
           tabBarIcon: ({ color }) => (
-            <Icon size={28} source="music-circle" color={color} />
+            <Icon size={24} source="music-circle" color={color} />
           ),
           animation: "shift",
         }}
