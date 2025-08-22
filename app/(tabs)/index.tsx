@@ -22,7 +22,7 @@ export default function HomeScreen() {
   }, []);
 
   useEffect(() => {
-    if(!ready) return;
+    if (!ready) return;
     IOState.hostAddress = hostAddress;
   }, [hostAddress]);
 
@@ -53,7 +53,6 @@ export default function HomeScreen() {
         alignItems: "center",
         justifyContent: "center",
         width: "100%",
-        padding: 16,
       }}
     >
       {ready && (
@@ -66,7 +65,6 @@ export default function HomeScreen() {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                width: "100%",
                 height: "100%",
                 overflow: "hidden",
               }}
@@ -81,12 +79,12 @@ export default function HomeScreen() {
                     height: "100%",
                     justifyContent: "space-evenly",
                     alignItems: "center",
-                    gap: 32,
+
                   }}
                 >
                   <View
                     style={{
-                      marginTop: 32,
+                      marginTop: '25%',
                     }}
                   >
                     <NowPlayingArtwork />

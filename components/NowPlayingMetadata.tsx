@@ -24,8 +24,8 @@ export function NowPlayingMetadata({ nowPlaying }: Props) {
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'center',
-        paddingHorizontal: 24,
+        alignItems: 'flex-start',
+        paddingHorizontal: 0,
         paddingVertical: 0,
     },
     songTitle: {

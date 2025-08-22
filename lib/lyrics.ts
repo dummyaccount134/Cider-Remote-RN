@@ -39,11 +39,47 @@ function parseTtmlTime(time: string): number {
   return seconds;
 }
 
+// Lightweight TTML parser for React Native
 export async function parseTtml(ttml: string): Promise<LyricLine[]> {
   if (!ttml) {
     return [];
   }
-  return [];
+
+  const decodedTtml = ttml.replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+
+  // Extract songPart from div tag
+  const divRegex = /<div[^>]*itunes:songPart="([^"]*)"[^>]*>([\s\S]*?)<\/div>/g;
+  const pRegex = /<p([^>]*)>([\s\S]*?)<\/p>/g;
+  const beginRegex = /begin="([^"]*)"/;
+  const endRegex = /end="([^"]*)"/;
+
+  const lines: LyricLine[] = [];
+  let divMatch: RegExpExecArray | null;
+
+  while ((divMatch = divRegex.exec(decodedTtml)) !== null) {
+    const songPart = divMatch[1];
+    const divContent = divMatch[2];
+
+    let pMatch: RegExpExecArray | null;
+    while ((pMatch = pRegex.exec(divContent)) !== null) {
+      const pAttrs = pMatch[1];
+      const text = pMatch[2].trim();
+
+      const beginMatch = beginRegex.exec(pAttrs);
+      const endMatch = endRegex.exec(pAttrs);
+
+      if (beginMatch && endMatch && text) {
+        lines.push({
+          text,
+          begin: parseTtmlTime(beginMatch[1]),
+          end: parseTtmlTime(endMatch[1]),
+          songPart,
+        });
+      }
+    }
+  }
+
+  return lines;
 }
 
 export async function getLyrics(id: string) {

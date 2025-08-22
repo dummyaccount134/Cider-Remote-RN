@@ -84,8 +84,10 @@ export function ProgressBar() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 32,
-    paddingVertical: 8,
+    paddingHorizontal: 0,
+    width: '100%',
+    paddingVertical: 0,
+    margin: 'auto'
   },
   sliderContainer: {
     height: 40,
@@ -95,11 +97,11 @@ const styles = StyleSheet.create({
   slider: {
     width: '100%',
     height: 40,
+    
   },
   timeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 4,
   },
   timeText: {
     fontSize: 12,
