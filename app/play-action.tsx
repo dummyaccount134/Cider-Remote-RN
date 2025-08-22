@@ -24,7 +24,12 @@ export default function PlayAction() {
         <View style={styles.container}>
             <Card>
                 <Card.Content>
-                    <Text variant='displaySmall'>Select an action</Text>
+                    <Text variant='headlineSmall'>
+                        {playActionPromise.item?.attributes.name}
+                    </Text>
+                    <Text variant='labelLarge'>
+                        {playActionPromise.item?.type}
+                    </Text>
                     <View style={{
                         display: 'flex',
                         gap: 12,

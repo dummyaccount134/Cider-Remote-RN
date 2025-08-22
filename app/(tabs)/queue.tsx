@@ -20,7 +20,7 @@ export default function Queue() {
           Up Next
         </Text>
         {queue.map((item, idx) => (
-          <UIQueueItem key={item.id ?? idx} item={item} idx={idx} />
+          <UIQueueItem key={idx} item={item} idx={idx} />
         ))}
       </View>
     )

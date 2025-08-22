@@ -1,4 +1,6 @@
+import { interact } from "@/lib/interact";
 import { getLibraryPlaylists, libraryPlaylists } from "@/lib/library";
+import { ItemTypes } from "@/types/search";
 import { useAtomValue } from "jotai";
 import { ScrollView } from "react-native";
 import { List, Text } from "react-native-paper";
@@ -49,11 +51,13 @@ export default function Library() {
                         left={props => <List.Icon {...props} icon="refresh" />}
                         onPress={() => { getLibraryPlaylists() }}
                     />
-                    {playlists.map((playlist, idx) => <List.Item
-                        title={playlist.attributes.name}
+                    {playlists.map((item, idx) => <List.Item
+                        title={item.attributes.name}
                         key={idx}
                         left={props => <List.Icon {...props} icon="music-note" />}
-                        onPress={() => { }}
+                        onPress={() => {
+                            interact({ item: (item as unknown as ItemTypes) })
+                        }}
                     />)}
 
 
