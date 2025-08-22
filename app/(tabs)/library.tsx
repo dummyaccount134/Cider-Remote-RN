@@ -1,15 +1,21 @@
 import { interact } from "@/lib/interact";
-import { getLibraryPlaylists, libraryPlaylists } from "@/lib/library";
+import { getLibraryPlaylists, libraryPlaylists, libraryPlaylistsLoading } from "@/lib/library";
 import { ItemTypes } from "@/types/search";
 import { useRouter } from "expo-router";
 import { useAtomValue } from "jotai";
+import { useEffect } from "react";
 import { ScrollView, View } from "react-native";
-import { IconButton, List, Text } from "react-native-paper";
+import { ActivityIndicator, IconButton, List, MD3Colors, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Library() {
     const playlists = useAtomValue(libraryPlaylists);
+    const playlistsLoading = useAtomValue(libraryPlaylistsLoading);
     const router = useRouter();
+
+    useEffect(() => {
+        getLibraryPlaylists();
+    }, [])
     return (
         <ScrollView>
             <SafeAreaView >
@@ -56,11 +62,14 @@ export default function Library() {
                     padding: 16,
                     fontWeight: 'bold'
                 }} variant="headlineSmall">Playlists</Text>
-
                 <List.Section>
                     <List.Item
                         title="Refresh"
-                        left={props => <List.Icon {...props} icon="refresh" />}
+                        left={props =>
+                            playlistsLoading
+                                ? <ActivityIndicator animating={true} color={MD3Colors.primary0} />
+                                : <List.Icon {...props} icon="refresh" />
+                        }
                         onPress={() => { getLibraryPlaylists() }}
                     />
                     {playlists.map((item, idx) => <List.Item
