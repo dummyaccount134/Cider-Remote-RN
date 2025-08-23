@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { GestureResponderEvent, StyleSheet, View } from "react-native";
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import { IconButton, Portal, Surface, Text, TouchableRipple } from "react-native-paper";
-import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Artwork } from "./Artwork";
 import { ArtworkBlur } from "./ArtworkBlur";
@@ -31,7 +31,11 @@ export function NowPlayingBar() {
         if (opened) {
             translateY.value = 800;
             overlayOpacity.value = 1;
-            translateY.value = withTiming(0, { duration: 250 });
+            translateY.value = withSpring(0, {
+                damping: 20,
+                stiffness: 90,
+                mass: 0.8,
+            });
         }
     }, [opened]);
 
