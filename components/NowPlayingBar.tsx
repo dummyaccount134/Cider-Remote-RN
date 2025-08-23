@@ -29,7 +29,9 @@ export function NowPlayingBar() {
 
     useEffect(() => {
         if (opened) {
-            overlayOpacity.value = withTiming(1, { duration: 200 });
+            translateY.value = 800;
+            overlayOpacity.value = 1;
+            translateY.value = withTiming(0, { duration: 250 });
         }
     }, [opened]);
 
@@ -90,7 +92,8 @@ export function NowPlayingBar() {
                 <Portal>
                     <View style={{
                         flex: 1,
-                        pointerEvents: opened ? 'auto' : 'none'
+                        pointerEvents: opened ? 'auto' : 'none',
+                        display: opened ? 'flex' : 'none',
                     }}>
                         <PanGestureHandler
                             onGestureEvent={onOverlayGestureEvent}
