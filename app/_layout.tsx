@@ -29,8 +29,8 @@ export default function RootLayout() {
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="+not-found" />
-            <Stack.Screen name="albums/[id]/index" options={{headerShown: false}} />
-            <Stack.Screen name="playlists/[id]/index" options={{headerShown: false}} />
+            <Stack.Screen name="albums/[id]/index" options={{ headerShown: false }} />
+            <Stack.Screen name="playlists/[id]/index" options={{ headerShown: false }} />
             <Stack.Screen
               name="play-action"
               options={{
@@ -39,6 +39,14 @@ export default function RootLayout() {
                 title: 'Play Action',
                 headerShown: false,
                 animationDuration: 300,
+              }}
+            />
+            <Stack.Screen
+              name="modals/now-playing"
+              options={{
+                presentation: 'card',
+                animation: 'slide_from_bottom',
+                title: 'Now Playing',
               }}
             />
             <Stack.Screen

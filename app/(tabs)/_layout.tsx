@@ -1,9 +1,10 @@
+import { NowPlayingBar } from "@/components/NowPlayingBar";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { CommonActions } from "@react-navigation/native";
 import { Tabs } from "expo-router";
 import React from "react";
-import { Platform } from "react-native";
+import { Platform, View } from "react-native";
 import { BottomNavigation, Icon } from "react-native-paper";
 
 
@@ -13,44 +14,47 @@ export default function TabLayout() {
   return (
     <Tabs
       tabBar={({ navigation, state, descriptors, insets }) => (
-        <BottomNavigation.Bar
-          navigationState={state}
-          safeAreaInsets={insets}
-          onTabPress={({ route, preventDefault }) => {
-            const event = navigation.emit({
-              type: 'tabPress',
-              target: route.key,
-              canPreventDefault: true,
-            });
-
-            if (event.defaultPrevented) {
-              preventDefault();
-            } else {
-              navigation.dispatch({
-                ...CommonActions.navigate(route.name, route.params),
-                target: state.key,
+        <View>
+          {state.routes[state.index]?.name !== 'index' && <NowPlayingBar />}
+          <BottomNavigation.Bar
+            navigationState={state}
+            safeAreaInsets={insets}
+            onTabPress={({ route, preventDefault }) => {
+              const event = navigation.emit({
+                type: 'tabPress',
+                target: route.key,
+                canPreventDefault: true,
               });
-            }
-          }}
-          renderIcon={({ route, focused, color }) =>
-            descriptors[route.key].options.tabBarIcon?.({
-              focused,
-              color,
-              size: 24,
-            }) || null
-          }
-          getLabelText={({ route }) => {
-            const { options } = descriptors[route.key];
-            const label =
-              typeof options.tabBarLabel === 'string'
-                ? options.tabBarLabel
-                : typeof options.title === 'string'
-                  ? options.title
-                  : route.name;
 
-            return label;
-          }}
-        />
+              if (event.defaultPrevented) {
+                preventDefault();
+              } else {
+                navigation.dispatch({
+                  ...CommonActions.navigate(route.name, route.params),
+                  target: state.key,
+                });
+              }
+            }}
+            renderIcon={({ route, focused, color }) =>
+              descriptors[route.key].options.tabBarIcon?.({
+                focused,
+                color,
+                size: 24,
+              }) || null
+            }
+            getLabelText={({ route }) => {
+              const { options } = descriptors[route.key];
+              const label =
+                typeof options.tabBarLabel === 'string'
+                  ? options.tabBarLabel
+                  : typeof options.title === 'string'
+                    ? options.title
+                    : route.name;
+
+              return label;
+            }}
+          />
+        </View>
       )}
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,

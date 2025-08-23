@@ -86,7 +86,7 @@ export default function SearchPage() {
                                     <View key={type}>
                                         <List.Subheader>{type.charAt(0).toUpperCase() + type.slice(1)} Results</List.Subheader>
                                         {results?.[type as keyof SearchResponse['results']]?.data?.map((item, idx) => (
-                                            <View key={item.id ?? idx}>
+                                            <View key={idx}>
                                                 <ResultListItem
                                                     item={item as ItemTypes}
                                                     formatArtworkUrl={formatArtworkUrl}

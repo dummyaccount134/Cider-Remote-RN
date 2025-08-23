@@ -1,3 +1,5 @@
+import { MediaItemArtwork } from "./musickit";
+
 export type APIPlaybackEvent<T> = {
   data: T;
   type: APIPlaybackType;
@@ -29,11 +31,7 @@ export type NowPlayingItemDidChange = NowPlayingAttributes;
 export type NowPlayingAttributes = {
   albumName: string;
   artistName: string;
-  artwork: {
-    width: number;
-    height: number;
-    url: string;
-  };
+  artwork: MediaItemArtwork;
   audioLocale: string;
   audioTraits: string[];
   composerName: string;
