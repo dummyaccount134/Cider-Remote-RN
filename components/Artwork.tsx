@@ -16,7 +16,7 @@ export function Artwork(props: ArtworkProps) {
     const artworkUri = useMemo(() => {
         if (!props.artwork.url) return;
         return formatArtworkUrl(props.artwork.url, props.options);
-    }, [props.artwork.url, props.options]);
+    }, [props.artwork?.url, props?.options]);
 
     const modeStyle = useMemo(() => {
         switch (props.mode) {
