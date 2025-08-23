@@ -17,7 +17,8 @@ export default function NowPlayingModal() {
     }));
 
     const onGestureEvent = (event: any) => {
-        dragY.current = event.nativeEvent.translationY;
+        // Only allow dragging down (positive translationY)
+        dragY.current = Math.max(0, event.nativeEvent.translationY);
         translateY.value = dragY.current;
     };
 
