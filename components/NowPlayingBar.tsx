@@ -33,16 +33,17 @@ export function NowPlayingBar() {
                         flexDirection: 'row',
                         alignItems: 'center',
                         padding: 2,
-                        paddingLeft: 18,
-                        paddingRight: 18,
+                        paddingLeft: 14,
+                        paddingRight: 14,
+                        paddingVertical: 6,
                         width: '100%',
                         gap: 16,
                     }}>
                         <Artwork
                             mode="list-item"
                             artwork={nowPlaying.artwork} style={{
-                                width: 40,
-                                height: 40,
+                                width: 55,
+                                height: 55,
                             }} options={{ width: 600, height: 600 }} />
                         <View style={styles.container}>
                             <Text variant="titleMedium" numberOfLines={1}>
