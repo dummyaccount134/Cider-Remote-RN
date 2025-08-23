@@ -1,11 +1,13 @@
 import { TrackList } from "@/components/TrackList";
 import { v3 } from "@/lib/am-api";
+import { interact } from "@/lib/interact";
 import { getTracks } from "@/lib/tracks";
-import { Album, Song } from "@/types/search";
+import { Album, ItemTypes, Song } from "@/types/search";
 import { useRoute } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Text } from "react-native-paper";
+import { Button, IconButton, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AlbumPage() {
@@ -13,6 +15,7 @@ export default function AlbumPage() {
     const [item, setItem] = useState<Album>();
 
     const route = useRoute();
+    const router = useRouter();
 
     const id = useMemo(() => {
         return (route.params as { albumId: string }).albumId;
@@ -30,8 +33,8 @@ export default function AlbumPage() {
             }
         }>(href);
         setItem(res?.data.data[0]);
-        if (!item?.id) return;
-        const tracks = await getTracks(item.href.split('?')[0] + '/tracks');
+        if (!res?.data.data[0]?.id) return;
+        const tracks = await getTracks(res?.data.data[0].href.split('?')[0] + '/tracks');
         setTracks(tracks);
     }
 
@@ -42,8 +45,45 @@ export default function AlbumPage() {
     return (
         <ScrollView>
             <SafeAreaView>
-                <Text>Album ID: {id}</Text>
-                {item && <View><Text>Album Name: {item?.attributes.name}</Text>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        position: "relative",
+                        height: 64,
+                    }}
+                >
+                    <IconButton
+                        icon="arrow-left"
+                        onPress={() => router.back()}
+                        style={{ position: "absolute", left: 0, zIndex: 1 }}
+                    />
+                    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+
+                    </View>
+                </View>
+
+                {item && <View>
+                    <View style={{
+                        padding: 16,
+                    }}>
+                        <Text>Album ID: {id}</Text>
+                        <Text>Album Name: {item?.attributes.name}</Text>
+
+                        <Button
+                            icon="play"
+                            mode="contained"
+                            onPress={() => {
+                                if (item) {
+                                    interact({
+                                        item: item as ItemTypes,
+                                        playItem: true,
+                                    })
+                                }
+                            }}
+                        >Play</Button>
+                    </View>
                     <TrackList tracks={tracks} />
                 </View>}
             </SafeAreaView>
