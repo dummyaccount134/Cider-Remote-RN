@@ -1,5 +1,5 @@
-import { NowPlayingArtwork } from "@/components/Artwork";
 import { ArtworkBlur } from "@/components/ArtworkBlur";
+import { NowPlayingArtwork } from "@/components/NowPlayingArtwork";
 import { NowPlayingMetadata } from "@/components/NowPlayingMetadata";
 import { PlaybackButtons } from "@/components/PlaybackButtons";
 import { ProgressBar } from "@/components/ProgressBar";
