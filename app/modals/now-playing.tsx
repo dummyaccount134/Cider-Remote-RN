@@ -11,15 +11,27 @@ export default function NowPlayingModal() {
     const dragY = useRef(0);
     const router = useRouter();
     const translateY = useSharedValue(0);
+    const opacity = useSharedValue(1);
 
-    const animatedStyle = useAnimatedStyle(() => ({
-        transform: [{ translateY: translateY.value }],
-    }));
+    const animatedStyle = useAnimatedStyle(() => {
+        // Opacity decreases as translateY increases, clamped between 1 and 0.3
+        const minOpacity = 0.3;
+        const maxDrag = 800;
+        // If dismissing, use opacity.value, else calculate based on drag
+        const currentOpacity = opacity.value !== 1
+            ? opacity.value
+            : Math.max(minOpacity, Math.min(1, 1 - ((translateY.value / maxDrag) * (1 - minOpacity))));
+        return {
+            transform: [{ translateY: translateY.value }],
+            opacity: currentOpacity,
+        };
+    });
 
     const onGestureEvent = (event: any) => {
         // Only allow dragging down (positive translationY)
         dragY.current = Math.max(0, event.nativeEvent.translationY);
         translateY.value = dragY.current;
+        opacity.value = 1; // Reset opacity while dragging
     };
 
     const handleDismiss = () => {
@@ -29,15 +41,18 @@ export default function NowPlayingModal() {
     const onHandlerStateChange = (event: any) => {
         if (event.nativeEvent.state === State.END) {
             if (dragY.current > 40) {
-                // Animate down, then dismiss
-                translateY.value = withTiming(800, { duration: 250 }, (finished) => {
+                // Animate down and fade out, then dismiss
+                opacity.value = withTiming(0, { duration: 120 }, (finished) => {
                     if (finished) {
                         runOnJS(handleDismiss)();
+                        // Do not reset opacity here; modal will unmount
                     }
                 });
+                translateY.value = withTiming(800, { duration: 250 });
             } else {
-                // Animate back to position
+                // Animate back to position and restore opacity
                 translateY.value = withTiming(0, { duration: 200 });
+                opacity.value = withTiming(1, { duration: 200 });
             }
             dragY.current = 0;
         }
