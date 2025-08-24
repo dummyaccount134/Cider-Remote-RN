@@ -29,39 +29,43 @@ export function useMaterialYouTheme(): Themes {
     const neutral1 = palette?.system_neutral1;
     const neutral2 = palette?.system_neutral2;
 
-    const primary = isAndroid && accent1 ? accent1[6] : basePaper.colors.primary;
-    const secondary = isAndroid && accent2 ? accent2[6] : basePaper.colors.secondary;
+    const primary = isAndroid && accent1?.[6]
+      ? accent1[6]
+      : basePaper.colors.primary;
+    const secondary = isAndroid && accent2?.[6]
+      ? accent2[6]
+      : basePaper.colors.secondary;
 
-    const background = isAndroid && neutral1
-      ? (isDark ? neutral1[10] : neutral1[0])
+    const background = isAndroid && (isDark ? neutral1?.[10] : neutral1?.[0])
+      ? (isDark ? neutral1![10] : neutral1![0])
       : basePaper.colors.background;
 
-    const surface = isAndroid && neutral1
-      ? (isDark ? neutral1[9] : neutral1[0])
+    const surface = isAndroid && (isDark ? neutral1?.[9] : neutral1?.[0])
+      ? (isDark ? neutral1![9] : neutral1![0])
       : basePaper.colors.surface;
 
-    const onSurface = isAndroid && neutral1
-      ? (isDark ? neutral1[0] : neutral1[10])
+    const onSurface = isAndroid && (isDark ? neutral1?.[0] : neutral1?.[10])
+      ? (isDark ? neutral1![0] : neutral1![10])
       : basePaper.colors.onSurface;
 
-    const outline = isAndroid && neutral2
-      ? (isDark ? neutral2[6] : neutral2[4])
+    const outline = isAndroid && (isDark ? neutral2?.[6] : neutral2?.[4])
+      ? (isDark ? neutral2![6] : neutral2![4])
       : basePaper.colors.outline;
 
-    const secondaryContainer = isAndroid && accent2
-      ? (isDark ? accent2[7] : accent2[3])
+    const secondaryContainer = isAndroid && (isDark ? accent2?.[7] : accent2?.[3])
+      ? (isDark ? accent2![7] : accent2![3])
       : basePaper.colors.secondaryContainer;
 
-    const onSecondaryContainer = isAndroid && accent2
-      ? (isDark ? accent2[1] : accent2[9])
+    const onSecondaryContainer = isAndroid && (isDark ? accent2?.[1] : accent2?.[9])
+      ? (isDark ? accent2![1] : accent2![9])
       : basePaper.colors.onSecondaryContainer;
 
-    const surfaceVariant = isAndroid && neutral2
-      ? (isDark ? neutral2[9] : neutral2[2])
+    const surfaceVariant = isAndroid && (isDark ? neutral2?.[9] : neutral2?.[2])
+      ? (isDark ? neutral2![9] : neutral2![2])
       : basePaper.colors.surfaceVariant;
 
-    const onSurfaceVariant = isAndroid && neutral2
-      ? (isDark ? neutral2[6] : neutral2[4])
+    const onSurfaceVariant = isAndroid && (isDark ? neutral2?.[6] : neutral2?.[4])
+      ? (isDark ? neutral2![6] : neutral2![4])
       : basePaper.colors.onSurfaceVariant;
 
     const paperTheme: MD3Theme = {
