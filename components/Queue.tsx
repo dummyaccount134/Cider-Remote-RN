@@ -1,4 +1,10 @@
-import { changeToIndex, fetchQueue, queueItems, removeByIndex, setQueue as setQueueApi } from "@/lib/queue";
+import {
+  changeToIndex,
+  fetchQueue,
+  queueItems,
+  removeByIndex,
+  setQueue as setQueueApi,
+} from "@/lib/queue";
 import { QueueItem } from "@/types/musickit";
 import { useIsFocused } from "@react-navigation/native";
 import { useAtom } from "jotai";
@@ -8,8 +14,15 @@ import DraggableFlatList, {
   DragEndParams,
   RenderItemParams,
 } from "react-native-draggable-flatlist";
-import { Button, Dialog, IconButton, List, Portal, Text, useTheme } from "react-native-paper";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  Button,
+  Dialog,
+  IconButton,
+  List,
+  Portal,
+  Text,
+  useTheme,
+} from "react-native-paper";
 
 export default function Queue() {
   const isFocused = useIsFocused();
@@ -24,7 +37,7 @@ export default function Queue() {
 
   const onDragEnd = (params: DragEndParams<QueueItem>) => {
     setQueue(params.data);
-    const newQueueIds = params.data.map(item => item.id);
+    const newQueueIds = params.data.map((item) => item.id);
     setQueueApi(newQueueIds);
   };
 
@@ -33,19 +46,17 @@ export default function Queue() {
   }
 
   return (
-    <SafeAreaView style={[styles.container]}>
-      <DraggableFlatList
-        data={queue}
-        onDragEnd={onDragEnd}
-        keyExtractor={(item) => item.id}
-        renderItem={UIQueueItem}
-        ListHeaderComponent={() => (
-          <Text variant="headlineSmall" style={styles.header}>
-            Up Next
-          </Text>
-        )}
-      />
-    </SafeAreaView>
+    <DraggableFlatList
+      data={queue}
+      onDragEnd={onDragEnd}
+      keyExtractor={(item) => item.id}
+      renderItem={UIQueueItem}
+      ListHeaderComponent={() => (
+        <Text variant="headlineSmall" style={styles.header}>
+          Up Next
+        </Text>
+      )}
+    />
   );
 }
 
@@ -53,7 +64,7 @@ function UIQueueItem({ item, drag, isActive }: RenderItemParams<QueueItem>) {
   const [showActions, setShowActions] = useState(false);
   const theme = useTheme();
   const [queue] = useAtom(queueItems);
-  const idx = queue.findIndex(i => i.id === item.id);
+  const idx = queue.findIndex((i) => i.id === item.id);
 
   const artworkUri = useMemo(() => {
     return item.attributes.artwork?.url
@@ -63,11 +74,13 @@ function UIQueueItem({ item, drag, isActive }: RenderItemParams<QueueItem>) {
 
   return (
     <>
-      <View style={[
-        styles.listItemContainer,
-        isActive && styles.dragging,
-        { width: '100%' },
-      ]}>
+      <View
+        style={[
+          styles.listItemContainer,
+          isActive && styles.dragging,
+          { width: "100%" },
+        ]}
+      >
         <TouchableOpacity onLongPress={drag} style={styles.dragHandle}>
           <IconButton icon="drag-horizontal-variant" />
         </TouchableOpacity>
@@ -87,26 +100,34 @@ function UIQueueItem({ item, drag, isActive }: RenderItemParams<QueueItem>) {
             )
           }
           right={(props) => (
-            <IconButton icon="menu" onPress={() => setShowActions(true)} {...props} />
+            <IconButton
+              icon="menu"
+              onPress={() => setShowActions(true)}
+              {...props}
+            />
           )}
           titleStyle={styles.title}
-          descriptionStyle={[styles.description, { color: theme.colors.onSurfaceVariant }]}
+          descriptionStyle={[
+            styles.description,
+            { color: theme.colors.onSurfaceVariant },
+          ]}
           style={styles.listItem}
         />
       </View>
 
       <Portal>
         <Dialog visible={showActions} onDismiss={() => setShowActions(false)}>
-          <Dialog.Title>
-            {item.attributes.name ?? "Untitled"}
-          </Dialog.Title>
+          <Dialog.Title>{item.attributes.name ?? "Untitled"}</Dialog.Title>
           <Dialog.Content>
             <Button
               icon="close"
               onPress={() => {
                 removeByIndex(idx);
                 setShowActions(false);
-              }}>Remove From Queue</Button>
+              }}
+            >
+              Remove From Queue
+            </Button>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={() => setShowActions(false)}>Done</Button>
@@ -124,7 +145,7 @@ const styles = StyleSheet.create({
   },
   header: {
     marginVertical: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   listItem: {
     paddingVertical: 8,
@@ -137,7 +158,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 2,
   },
   description: {
@@ -145,7 +166,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   dragging: {
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 4,

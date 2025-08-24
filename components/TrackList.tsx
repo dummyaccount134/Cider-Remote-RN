@@ -27,9 +27,9 @@ export function TrackList({ tracks, container }: TrackListProps) {
     return (
         <View>
             <List.Section>
-                {tracks.map((track) => (
+                {tracks.map((track, idx) => (
                     <List.Item
-                        key={track.id}
+                        key={idx}
                         title={track.attributes.name}
                         onPress={() => handlePress(track)}
                         description={track.attributes.artistName}
