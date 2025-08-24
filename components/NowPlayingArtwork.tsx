@@ -1,15 +1,27 @@
-import { nowPlayingItem } from "@/lib/playback-control";
+import { isPlaying as isPlayingAtom, nowPlayingItem } from "@/lib/playback-control";
 import { ArtworkStyles } from "@/styles/artwork";
 import { formatArtworkUrl } from "@/utils/artwork";
 import { Image } from "expo-image";
 import { useAtomValue } from "jotai";
-import { useEffect, useMemo, useState } from "react";
-import { Dimensions, StyleSheet, View } from "react-native";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Animated, Dimensions, StyleSheet, View } from "react-native";
 import { Icon, useTheme } from "react-native-paper";
 
 export function NowPlayingArtwork() {
   const nowPlaying = useAtomValue(nowPlayingItem);
   const [screenDimensions, setScreenDimensions] = useState(() => Dimensions.get('window'));
+  const isPlaying = useAtomValue(isPlayingAtom);
+
+  // Animated value for scaling
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  useEffect(() => {
+    Animated.spring(scaleAnim, {
+      toValue: isPlaying ? 1 : 0.9,
+      friction: 5,
+      tension: 120,
+      useNativeDriver: true,
+    }).start();
+  }, [isPlaying, scaleAnim]);
 
   useEffect(() => {
     const subscription = Dimensions.addEventListener('change', ({ window }) => {
@@ -26,19 +38,21 @@ export function NowPlayingArtwork() {
     return formatArtworkUrl(nowPlaying.artwork?.url, { width: 600, height: 600 });
   }, [nowPlaying]);
 
-  const artworkSize = Math.min(screenDimensions.width, screenDimensions.height, 600) * 0.8;
+  const artworkSize = Math.min(screenDimensions.width, screenDimensions.height, 600) * 0.9;
 
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: artworkUri }}
-        style={[styles.artwork, { width: artworkSize, height: artworkSize }]}
-        contentFit="cover"
-        transition={500}
-        cachePolicy="memory-disk"
-        recyclingKey={artworkUri}
-        placeholderContentFit="cover"
-      />
+      <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+        <Image
+          source={{ uri: artworkUri }}
+          style={[styles.artwork, { width: artworkSize, height: artworkSize }]}
+          contentFit="cover"
+          transition={500}
+          cachePolicy="memory-disk"
+          recyclingKey={artworkUri}
+          placeholderContentFit="cover"
+        />
+      </Animated.View>
     </View>
   );
 }
