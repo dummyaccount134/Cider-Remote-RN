@@ -46,11 +46,15 @@ export function TrackList({ tracks, container }: TrackListProps) {
                             return (
                                 <Artwork
                                     artwork={track.attributes.artwork}
-                                    options={{ width: 40, height: 40 }}
+                                    options={{ width: 60, height: 60 }}
                                     mode="list-item"
                                     style={{
                                         aspectRatio: 1,
                                         marginLeft: 12,
+                                        width: 50,
+                                        height: 50,
+                                        borderRadius: 4,
+                                        backgroundColor: '#ccc',
                                     }} />
                             );
                         }} />
