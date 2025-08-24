@@ -3,13 +3,13 @@ import { QueueItem } from "@/types/musickit";
 import { useIsFocused } from "@react-navigation/native";
 import { useAtom } from "jotai";
 import { useEffect, useMemo, useState } from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
-import { Button, Dialog, IconButton, List, Portal, Text, useTheme } from "react-native-paper";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import DraggableFlatList, {
   DragEndParams,
   RenderItemParams,
 } from "react-native-draggable-flatlist";
+import { Button, Dialog, IconButton, List, Portal, Text, useTheme } from "react-native-paper";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Queue() {
   const isFocused = useIsFocused();
@@ -33,7 +33,7 @@ export default function Queue() {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <SafeAreaView style={[styles.container]}>
       <DraggableFlatList
         data={queue}
         onDragEnd={onDragEnd}
@@ -66,7 +66,7 @@ function UIQueueItem({ item, drag, isActive }: RenderItemParams<QueueItem>) {
       <View style={[
         styles.listItemContainer,
         isActive && styles.dragging,
-        { backgroundColor: isActive ? theme.colors.surfaceVariant : theme.colors.background }
+        { width: '100%' },
       ]}>
         <TouchableOpacity onLongPress={drag} style={styles.dragHandle}>
           <IconButton icon="drag-horizontal-variant" />

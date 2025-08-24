@@ -2,74 +2,133 @@ import { nowPlayingItem } from "@/lib/playback-control";
 import { useAtomValue } from "jotai";
 import { useState } from "react";
 import { Dimensions, View } from "react-native";
+import { Button } from "react-native-paper";
+import Lyrics from "./Lyrics";
 import { NowPlayingArtwork } from "./NowPlayingArtwork";
 import { NowPlayingMetadata } from "./NowPlayingMetadata";
 import { PlaybackButtons } from "./PlaybackButtons";
 import { ProgressBar } from "./ProgressBar";
+import Queue from "./Queue";
 
 export function NowPlayingView() {
+  const nowPlaying = useAtomValue(nowPlayingItem);
 
-    const nowPlaying = useAtomValue(nowPlayingItem);
+  const [orientation] = useState<"portrait" | "landscape">(
+    Dimensions.get("window").width > Dimensions.get("window").height
+      ? "landscape"
+      : "portrait"
+  );
 
-    const [orientation] = useState<"portrait" | "landscape">(
-        Dimensions.get("window").width > Dimensions.get("window").height
-            ? "landscape"
-            : "portrait"
-    );
+  const [playerMode, setPlayerMode] = useState<"player" | "queue" | "lyrics">(
+    "player"
+  );
 
-    return (
+  return (
+    <View
+      style={{
+        flex: 1,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        overflow: "hidden",
+      }}
+    >
+      {nowPlaying && (
         <View
-            style={{
-                flex: 1,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
-                overflow: "hidden",
-            }}
+          style={{
+            display: "flex",
+            flexDirection: orientation === "landscape" ? "row" : "column",
+            width: "100%",
+            height: "100%",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            gap: orientation === "landscape" ? 32 : undefined,
+          }}
         >
-            {nowPlaying && (
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: 8,
+            }}
+          >
+            <Button
+              mode={playerMode === "player" ? "contained" : "outlined"}
+              onPress={() => setPlayerMode("player")}
+            >
+              Player
+            </Button>
+            <Button
+              mode={playerMode === "queue" ? "contained" : "outlined"}
+              onPress={() => setPlayerMode("queue")}
+            >
+              Queue
+            </Button>
+            <Button
+              mode={playerMode === "lyrics" ? "contained" : "outlined"}
+              onPress={() => setPlayerMode("lyrics")}
+            >
+              Lyrics
+            </Button>
+          </View>
+          {/* Player Modes */}
+          <View>
+            {playerMode === "player" && (
+              <View
+                style={{
+                  marginTop: orientation == "portrait" ? "16%" : 0,
+                }}
+              >
+                <NowPlayingArtwork />
                 <View
-                    style={{
-                        display: "flex",
-                        flexDirection:
-                            orientation === "landscape" ? "row" : "column",
-                        width: "100%",
-                        height: "100%",
-                        justifyContent: "space-evenly",
-                        alignItems: "center",
-                        gap: orientation === "landscape" ? 32 : undefined,
-                    }}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    flex: 1,
+                    width: orientation === "landscape" ? undefined : "100%",
+                    gap: 16,
+                    paddingHorizontal: 16,
+                  }}
                 >
-                    <View
-                        style={{
-                            marginTop: orientation == 'portrait' ? '16%' : 0,
-                        }}
-                    >
-                        <NowPlayingArtwork />
-                    </View>
-                    <View
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "center",
-                            flex: 1,
-                            width: orientation === "landscape" ? undefined : "100%",
-                            gap: 16,
-                            paddingHorizontal: 16,
-                        }}
-                    >
-                        <View style={{ flexShrink: 1 }}>
-                            <NowPlayingMetadata nowPlaying={nowPlaying} />
-                        </View>
-
-                        <View>
-                            <ProgressBar />
-                            <PlaybackButtons />
-                        </View>
-                    </View>
+                  <View style={{ flexShrink: 1 }}>
+                    <NowPlayingMetadata nowPlaying={nowPlaying} />
+                  </View>
+                  <View>
+                    <ProgressBar />
+                    <PlaybackButtons />
+                  </View>
                 </View>
+              </View>
             )}
+            {playerMode === "queue" && (
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flex: 1,
+                  width: '100%',
+                }}
+              >
+                <Queue />
+              </View>
+            )}
+            {playerMode === "lyrics" && (
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flex: 1,
+                  width: '100%',
+                }}
+              >
+                <Lyrics/>
+              </View>
+            )}
+          </View>
         </View>
-    )
+      )}
+    </View>
+  );
 }

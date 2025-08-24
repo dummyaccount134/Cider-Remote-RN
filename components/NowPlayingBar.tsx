@@ -123,7 +123,7 @@ export function NowPlayingBar() {
                             ]}>
                                 <Surface style={{
                                     flex: 1,
-                                    padding: 32,
+                                    paddingTop: insets.top - 12,
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     borderTopRightRadius: 16,

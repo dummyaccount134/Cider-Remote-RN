@@ -1,4 +1,3 @@
-import { ArtworkBlur } from "@/components/ArtworkBlur";
 import { IOState } from "@/lib/io";
 import { getLyrics, LyricLine } from "@/lib/lyrics";
 import { nowPlayingItem, seekTo } from "@/lib/playback-control";
@@ -27,12 +26,14 @@ export function LyricsView() {
     const [loading, setLoading] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(-1);
     const [scrollViewHeight, setScrollViewHeight] = useState(0);
+    const [isUserScrolling, setIsUserScrolling] = useState(false);
 
     const scrollViewRef = useRef<ScrollView>(null);
     const lineRefs = useRef<(View | null)[]>([]);
     const linePositions = useRef<number[]>([]);
     const theme = useTheme();
     const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const userScrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
     // Animated values for each lyric line
     const animatedScales = useRef<Animated.Value[]>([]);
     const { width } = useWindowDimensions();
@@ -62,6 +63,16 @@ export function LyricsView() {
         fetchLyrics();
         lineRefs.current = [];
         linePositions.current = [];
+        
+        // Cleanup function to clear timeouts when component unmounts
+        return () => {
+            if (scrollTimeout.current) {
+                clearTimeout(scrollTimeout.current);
+            }
+            if (userScrollTimeout.current) {
+                clearTimeout(userScrollTimeout.current);
+            }
+        };
     }, [nowPlaying?.playParams?.id]);
 
     useEffect(() => {
@@ -83,7 +94,8 @@ export function LyricsView() {
             !lineRefs.current[currentIndex] ||
             scrollViewHeight === 0 ||
             !lyrics ||
-            lyrics.length === 0
+            lyrics.length === 0 ||
+            isUserScrolling // Don't auto-scroll when user is manually scrolling
         ) {
             return;
         }
@@ -124,7 +136,7 @@ export function LyricsView() {
                 clearTimeout(scrollTimeout.current);
             }
         };
-    }, [currentIndex, scrollViewHeight, lyrics]);
+    }, [currentIndex, scrollViewHeight, lyrics, isUserScrolling]);
 
     const handleLyricPress = async (line: LyricLine) => {
         try {
@@ -151,17 +163,35 @@ export function LyricsView() {
         });
     }, [currentIndex, lyrics]);
 
+    const handleScrollBegin = () => {
+        setIsUserScrolling(true);
+        // Clear any existing timeout
+        if (userScrollTimeout.current) {
+            clearTimeout(userScrollTimeout.current);
+        }
+    };
+
+    const handleScrollEnd = () => {
+        // Set a timeout to re-enable auto-scrolling after user stops scrolling
+        userScrollTimeout.current = setTimeout(() => {
+            setIsUserScrolling(false);
+        }, 2000); // Wait 2 seconds after user stops scrolling before re-enabling auto-scroll
+    };
+
     return (
         <View style={{
-            backgroundColor: 'black',
             height: '100%',
+            width: '100%',
         }}>
-            {nowPlaying && <ArtworkBlur />}
             <ScrollView
                 ref={scrollViewRef}
                 onLayout={(event) => {
                     setScrollViewHeight(event.nativeEvent.layout.height);
                 }}
+                onScrollBeginDrag={handleScrollBegin}
+                onScrollEndDrag={handleScrollEnd}
+                onMomentumScrollBegin={handleScrollBegin}
+                onMomentumScrollEnd={handleScrollEnd}
                 contentContainerStyle={[styles.container, { maxWidth: width - 48 }]}
                 showsVerticalScrollIndicator={false}
                 bounces={true}
