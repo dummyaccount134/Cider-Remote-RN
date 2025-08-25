@@ -3,6 +3,7 @@ import {
   PlaybackStateDidChange,
   PlaybackTimeDidChange,
 } from "@/types";
+import { getStorefront } from "@/utils/fetch";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { atom, getDefaultStore } from "jotai";
 import { io, Socket } from "socket.io-client";
@@ -63,7 +64,7 @@ export class IOState {
     IOState.instance.disconnect();
   }
 
-  static connect() {
+  static async connect() {
     IOState.saveApiToken();
 
     IOState.store.get(IOState.connected);
@@ -83,6 +84,7 @@ export class IOState {
       IOState.handlePlaybackEvent(msg);
     });
 
+    await getStorefront();
     getNowPlayingItem();
     fetchQueue();
   }

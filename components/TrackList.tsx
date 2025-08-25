@@ -21,7 +21,7 @@ export function TrackList({ tracks, container }: TrackListProps) {
             }
         }
 
-        // interact({ item: item as ItemTypes });
+        interact({ item: item as ItemTypes });
     }
 
     return (
