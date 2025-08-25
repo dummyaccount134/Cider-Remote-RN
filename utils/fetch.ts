@@ -22,7 +22,13 @@ export async function CiderFetch<T>(
     return;
   }
 
-  return response.json() as Promise<T>;
+  try {
+    const toJson = await response.json() as Promise<T>;
+    return toJson;
+  }catch(e) {
+    console.error('CiderFetch Error', href, body, e)
+    return undefined;
+  }
 }
 
 export async function getStorefront() {
