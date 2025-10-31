@@ -90,7 +90,7 @@ export function NowPlayingView() {
             {playerMode === "player" && (
               <View
                 style={{
-                  marginTop: orientation == "portrait" ? "16%" : 0,
+                  marginTop: orientation == "portrait" ? "8%" : 0,
                 }}
               >
                 <NowPlayingArtwork />
