@@ -1,5 +1,9 @@
 # Cider Remote
 
+---
+Still in very early development
+---
+
 This project is the Cider Remote application for Android, built using React Native and Expo.
 
 ## Get started
@@ -37,3 +41,6 @@ Some Gradle build errors can be resolved by rebuilding caches with:
 cd android
 ./gradlew bundleRelease --build-cache
 ```
+
+## License
+Apache License 2.0 with Commons Clause
