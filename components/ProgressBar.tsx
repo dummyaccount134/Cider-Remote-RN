@@ -1,11 +1,25 @@
+/** @format */
+
 import { IOState } from "@/lib/io";
 import { isPlaying, seekTo } from "@/lib/playback-control";
 import Slider from "@react-native-community/slider";
 import { useAtomValue } from "jotai";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { PixelRatio, Platform, StyleSheet, useWindowDimensions, View } from "react-native";
+import {
+  PixelRatio,
+  Platform,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { Text, useTheme } from "react-native-paper";
-import Animated, { Easing, useAnimatedProps, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
+import Animated, {
+  Easing,
+  useAnimatedProps,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+} from "react-native-reanimated";
 import Svg, { Circle, Path, Rect } from "react-native-svg";
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
@@ -23,7 +37,7 @@ export function ProgressBar() {
   const deviceScale = useMemo(() => {
     const fontScale = Math.min(PixelRatio.getFontScale?.() ?? 1, 1.3);
     const widthClass = windowWidth < 600 ? 1 : windowWidth < 840 ? 1.1 : 1.2;
-    const platformBump = Platform.OS === 'android' ? 1.05 : 1;
+    const platformBump = Platform.OS === "android" ? 1.05 : 1;
     return fontScale * widthClass * platformBump;
   }, [windowWidth]);
 
@@ -36,28 +50,28 @@ export function ProgressBar() {
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   const formatRemainingTime = (current: number, total: number): string => {
     const remaining = total - current;
     const mins = Math.floor(remaining / 60);
     const secs = Math.floor(remaining % 60);
-    return `-${mins}:${secs.toString().padStart(2, '0')}`;
+    return `-${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   const handleSeek = async (position: number) => {
     try {
-      console.log('Seeking to position:', position);
+      console.log("Seeking to position:", position);
       await seekTo(position);
-      console.log('Seek completed');
+      console.log("Seek completed");
     } catch (error) {
-      console.error('Failed to seek:', error);
+      console.error("Failed to seek:", error);
     }
   };
 
   const handleSlidingStart = () => {
-    console.log('Sliding started');
+    console.log("Sliding started");
     setIsSliding(true);
   };
 
@@ -68,7 +82,7 @@ export function ProgressBar() {
   };
 
   const handleSlidingComplete = (value: number) => {
-    console.log('Sliding completed, seeking to:', value);
+    console.log("Sliding completed, seeking to:", value);
     setIsSliding(false);
     handleSeek(value);
   };
@@ -79,7 +93,10 @@ export function ProgressBar() {
   useEffect(() => {
     phase.value = 0;
     phase.value = withRepeat(
-      withTiming(2 * Math.PI, { duration: Platform.OS === 'android' ? 6500 : 6000, easing: Easing.linear }),
+      withTiming(2 * Math.PI, {
+        duration: Platform.OS === "android" ? 6500 : 6000,
+        easing: Easing.linear,
+      }),
       -1,
       false
     );
@@ -100,36 +117,59 @@ export function ProgressBar() {
   useEffect(() => {
     const ratio = duration > 0 ? currentDisplayProgress / duration : 0;
     if (playing) {
-      progressRatioShared.value = withTiming(ratio, { duration: 180, easing: Easing.out(Easing.cubic) });
+      progressRatioShared.value = withTiming(ratio, {
+        duration: 180,
+        easing: Easing.out(Easing.cubic),
+      });
     } else {
       progressRatioShared.value = ratio;
     }
   }, [currentDisplayProgress, duration, playing, progressRatioShared]);
 
-  const buildPath = useCallback((w: number, h: number, amp: number, wl: number, ph: number, overflow: number) => {
-    'worklet';
-    const midY = h / 2;
-    const step = Math.max(3, Math.floor(wl / 28)); // smoother wave sampling
-    let d = `M ${-overflow} ${midY}`;
-    for (let x = -overflow; x <= w + overflow; x += step) {
-      const y = midY + amp * Math.sin((2 * Math.PI * x) / wl + ph);
-      d += ` L ${x} ${y}`;
-    }
-    return d;
-  }, []);
+  const buildPath = useCallback(
+    (
+      w: number,
+      h: number,
+      amp: number,
+      wl: number,
+      ph: number,
+      overflow: number
+    ) => {
+      "worklet";
+      const midY = h / 2;
+      const step = Math.max(3, Math.floor(wl / 28)); // smoother wave sampling
+      let d = `M ${-overflow} ${midY}`;
+      for (let x = -overflow; x <= w + overflow; x += step) {
+        const y = midY + amp * Math.sin((2 * Math.PI * x) / wl + ph);
+        d += ` L ${x} ${y}`;
+      }
+      return d;
+    },
+    []
+  );
 
   const overflowX = Math.ceil(amplitude + strokeWidth * 4);
 
   const animatedProps = useAnimatedProps(() => {
     const totalW = widthShared.value;
     const h = heightShared.value;
-    const d = buildPath(totalW, h, amplitude, wavelength, phase.value, overflowX);
+    const d = buildPath(
+      totalW,
+      h,
+      amplitude,
+      wavelength,
+      phase.value,
+      overflowX
+    );
     return { d } as any;
   });
 
   const unfilledRectProps = useAnimatedProps(() => {
     const totalW = widthShared.value;
-    const progressW = Math.max(0, Math.min(totalW, totalW * progressRatioShared.value));
+    const progressW = Math.max(
+      0,
+      Math.min(totalW, totalW * progressRatioShared.value)
+    );
     const startX = progressW + strokeWidth / 2;
     return {
       x: startX,
@@ -146,8 +186,17 @@ export function ProgressBar() {
   const dragBarMarginV = 0;
   const dragBarProps = useAnimatedProps(() => {
     const totalW = widthShared.value;
-    const progressW = Math.max(0, Math.min(totalW, totalW * progressRatioShared.value));
-    const x = Math.max(0, Math.min(totalW - dragBarWidth, progressW + strokeWidth * 0.5 - dragBarWidth / 2));
+    const progressW = Math.max(
+      0,
+      Math.min(totalW, totalW * progressRatioShared.value)
+    );
+    const x = Math.max(
+      0,
+      Math.min(
+        totalW - dragBarWidth,
+        progressW + strokeWidth * 0.5 - dragBarWidth / 2
+      )
+    );
     return {
       x,
       y: dragBarMarginV,
@@ -178,7 +227,8 @@ export function ProgressBar() {
               {/* mask wave to the right of progress */}
               {(() => {
                 const totalW = layoutWidth;
-                const ratio = duration > 0 ? currentDisplayProgress / duration : 0;
+                const ratio =
+                  duration > 0 ? currentDisplayProgress / duration : 0;
                 const progressW = Math.max(0, Math.min(totalW, totalW * ratio));
                 const x = progressW;
                 const w = Math.max(0, totalW - x);
@@ -213,7 +263,9 @@ export function ProgressBar() {
                 const r = Math.max(1, (trackHeight - 2 * dotMarginV) / 2);
                 const cx = Math.max(r, layoutWidth - endInset - r);
                 const cy = trackHeight / 2;
-                return <Circle cx={cx} cy={cy} r={r} fill={theme.colors.primary} />;
+                return (
+                  <Circle cx={cx} cy={cy} r={r} fill={theme.colors.primary} />
+                );
               })()}
             </Svg>
           )}
@@ -233,10 +285,16 @@ export function ProgressBar() {
         />
       </View>
       <View style={styles.timeContainer}>
-        <Text variant="labelSmall" style={[styles.timeText, { color: theme.colors.onSurfaceVariant }]}>
+        <Text
+          variant="labelSmall"
+          style={[styles.timeText, { color: theme.colors.onSurfaceVariant }]}
+        >
           {formatTime(currentDisplayProgress)}
         </Text>
-        <Text variant="labelSmall" style={[styles.timeText, { color: theme.colors.onSurfaceVariant }]}>
+        <Text
+          variant="labelSmall"
+          style={[styles.timeText, { color: theme.colors.onSurfaceVariant }]}
+        >
           {formatRemainingTime(currentDisplayProgress, duration)}
         </Text>
       </View>
@@ -247,20 +305,20 @@ export function ProgressBar() {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 0,
-    width: '100%',
+    width: "100%",
     paddingVertical: 0,
-    margin: 'auto'
+    margin: "auto",
   },
   sliderContainer: {
-    justifyContent: 'center',
-    position: 'relative',
+    justifyContent: "center",
+    position: "relative",
   },
   timeContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   timeText: {
     fontSize: 12,
-    fontVariant: ['tabular-nums'],
+    fontVariant: ["tabular-nums"],
   },
 });

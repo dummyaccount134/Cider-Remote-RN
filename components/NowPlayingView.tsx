@@ -1,3 +1,5 @@
+/** @format */
+
 import { nowPlayingItem } from "@/lib/playback-control";
 import { useAtomValue } from "jotai";
 import { useState } from "react";
@@ -90,7 +92,8 @@ export function NowPlayingView() {
             {playerMode === "player" && (
               <View
                 style={{
-                  marginTop: orientation == "portrait" ? "8%" : 0,
+                  marginTop: orientation === "portrait" ? "8%" : 0,
+                  paddingHorizontal: 48,
                 }}
               >
                 <NowPlayingArtwork />
@@ -111,7 +114,7 @@ export function NowPlayingView() {
                   <View>
                     <ProgressBar />
                     <PlaybackButtons />
-                    <VolumeBar/>
+                    <VolumeBar />
                   </View>
                 </View>
               </View>

@@ -50,7 +50,7 @@ export function PlaybackButtons() {
       <View style={styles.primaryControls}>
         <IconButton
           icon={isShuffleOn ? "shuffle" : "shuffle-disabled"}
-          size={24}
+          size={18}
           mode="contained-tonal"
           selected={isShuffleOn}
           onPress={handleShuffle}
@@ -59,7 +59,7 @@ export function PlaybackButtons() {
 
         <IconButton
           icon="skip-previous"
-          size={36}
+          size={24}
           mode="contained-tonal"
           iconColor={theme.colors.onSecondaryContainer}
           onPress={handleSkipPrevious}
@@ -69,7 +69,7 @@ export function PlaybackButtons() {
 
         <IconButton
           icon={isPlaying ? "pause" : "play"}
-          size={48}
+          size={32}
           containerColor={theme.colors.primary}
           iconColor="#FFFFFF"
           onPress={handlePlayPause}
@@ -79,7 +79,7 @@ export function PlaybackButtons() {
 
         <IconButton
           icon="skip-next"
-          size={36}
+          size={24}
           mode="contained-tonal"
           iconColor={theme.colors.onSecondaryContainer}
           onPress={handleSkipNext}
@@ -89,7 +89,7 @@ export function PlaybackButtons() {
 
         <IconButton
           icon={repeatIcon}
-          size={24}
+          size={18}
           mode="contained-tonal"
           selected={repeatMode !== 0}
           onPress={handleRepeat}
@@ -108,10 +108,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 8,
+    gap: 4,
   },
   playButton: {
-    borderRadius: 36,
+    borderRadius: 24,
     elevation: 2,
     shadowColor: "#000",
     shadowOffset: {
@@ -126,20 +126,20 @@ const styles = StyleSheet.create({
   },
   blockButton: {
     borderRadius: 18,
-    width: 64,
-    height: 56,
+    width: 54,
+    height: 52,
   },
   blockButtonContent: {
-    width: 64,
-    height: 56,
+    width: 54,
+    height: 52,
   },
   primaryAction: {
-    borderRadius: 22,
-    width: 108,
+    borderRadius: 24,
+    width: 72,
     height: 72,
   },
   primaryActionContent: {
-    width: 108,
+    width: 72,
     height: 72,
   },
   compactIcon: {
