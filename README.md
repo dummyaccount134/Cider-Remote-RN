@@ -4,7 +4,7 @@
 Still in very early development
 ---
 
-This project is the Cider Remote application for Android, built using React Native and Expo.
+This project is the Cider Remote application for Android 12 and later, built using React Native and Expo.
 
 ## Get started
 
@@ -18,15 +18,20 @@ This project is the Cider Remote application for Android, built using React Nati
 2. Start the app
 
    ```bash
-   yarn start
+   yarn android
    ```
-
 
 ## Development Dependencies
 
 - Node 22
 - Yarn
 - Android SDK
+
+## Minimum Target Android Version
+Android 12 or later
+
+## Troubleshooting
+[Troubleshooting guides can be found on the Wiki](https://github.com/ciderapp/Cider-Remote-RN/wiki/Support)
 
 ## Build Troubleshooting
 
