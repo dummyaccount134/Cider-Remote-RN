@@ -13,7 +13,9 @@ type Themes = {
 
 export function useMaterialYouTheme(): Themes {
   const colorScheme = useColorScheme() ?? "light";
-  const palette = useMaterialYouPalette();
+  console.log('SDK Version:', Platform.Version);
+  const isNewerThan30 = Platform.OS === "android" && Number(Platform.Version) >= 31;
+  const palette = isNewerThan30 ? useMaterialYouPalette() : null;
 
   const isAndroid = Platform.OS === "android";
   const isDark = colorScheme === "dark";
