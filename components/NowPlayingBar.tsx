@@ -1,29 +1,31 @@
+/** @format */
+
 import {
-    isPlaying as isPlayingAtom,
-    nowPlayingItem,
-    playPause,
+  isPlaying as isPlayingAtom,
+  nowPlayingItem,
+  playPause,
 } from "@/lib/playback-control";
 import { useAtomValue } from "jotai";
 import { useEffect, useRef, useState } from "react";
 import { GestureResponderEvent, StyleSheet, View } from "react-native";
 import { PanGestureHandler, State } from "react-native-gesture-handler";
 import {
-    IconButton,
-    Portal,
-    Surface,
-    Text,
-    TouchableRipple,
+  IconButton,
+  Portal,
+  Surface,
+  Text,
+  TouchableRipple,
 } from "react-native-paper";
 import Animated, {
-    runOnJS,
-    useAnimatedStyle,
-    useSharedValue,
-    withSpring,
-    withTiming,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
 } from "react-native-reanimated";
 import {
-    SafeAreaView,
-    useSafeAreaInsets,
+  SafeAreaView,
+  useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { Artwork } from "./Artwork";
 import { ArtworkBlur } from "./ArtworkBlur";
@@ -138,7 +140,6 @@ export function NowPlayingBar() {
                     position: "absolute",
                     inset: 0,
                     flex: 1,
-                    
                   },
                   animatedOverlayStyle,
                 ]}
