@@ -77,6 +77,7 @@ export default function SearchPage() {
           <TextInput
             value={searchQuery}
             onChangeText={setSearchQuery}
+            onSubmitEditing={handleSearch}
             onKeyPress={({ nativeEvent }) => {
               if (nativeEvent.key === "Enter") {
                 handleSearch();

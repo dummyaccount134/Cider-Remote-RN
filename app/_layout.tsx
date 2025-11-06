@@ -8,6 +8,7 @@ import "react-native-reanimated";
 
 import { useMaterialYouTheme } from "@/hooks/useMaterialYouTheme";
 import { MaterialYouService } from "@assembless/react-native-material-you";
+import { Platform } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { PaperProvider } from "react-native-paper";
 import { configureReanimatedLogger } from "react-native-reanimated";
@@ -99,16 +100,27 @@ export default function RootLayout() {
     Roboto_900Black,
   });
   const loaded = localLoaded && googleFlexLoaded && googleRobotoLoaded;
+  
 
   if (!loaded) {
     // Async font loading only occurs in development.
     return null;
   }
+
+  const isNewerThan30 = Platform.OS === "android" && Number(Platform.Version) >= 31;
+  const materialYouElement = isNewerThan30 ? (
+    <MaterialYouService>
+      <ThemedProviders/>
+    </MaterialYouService>
+  ) : (
+    <ThemedProviders/>
+  );
+
+
   return (
     <GestureHandlerRootView>
-      <MaterialYouService>
-        <ThemedProviders />
-      </MaterialYouService>
+      {materialYouElement}
     </GestureHandlerRootView>
   );
+
 }
