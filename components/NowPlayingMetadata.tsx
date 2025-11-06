@@ -46,7 +46,7 @@ export function NowPlayingMetadata({ nowPlaying }: Props) {
 
     return {
       titleStyle: {
-        fontFamily: "Inter",
+        fontFamily: "RobotoFlex",
         fontWeight: variantTitleWeight,
         letterSpacing: variantLetter,
         textAlign: "center" as const,
