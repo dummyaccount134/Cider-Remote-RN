@@ -8,7 +8,6 @@ import "react-native-reanimated";
 
 import { safeMaterialYouChecker, useMaterialYouTheme } from "@/hooks/useMaterialYouTheme";
 import { MaterialYouService } from "@assembless/react-native-material-you";
-import TrackPlayer, { AppKilledPlaybackBehavior, Capability } from "@weights-ai/react-native-track-player";
 import { createAudioPlayer } from "expo-audio";
 import * as Linking from 'expo-linking';
 import { useEffect } from "react";
@@ -21,35 +20,8 @@ configureReanimatedLogger({
 });
 function ThemedProviders() {
   const { paperTheme, navTheme } = useMaterialYouTheme();
-  TrackPlayer.setupPlayer().then(() => {;
-  TrackPlayer.updateOptions({
-        // Media controls capabilities
-        capabilities: [
-            Capability.Play,
-            Capability.Pause,
-            Capability.Stop,
-            Capability.SkipToNext,
-            Capability.SkipToPrevious,
-        ],
-        notificationCapabilities: [
-            Capability.Play,
-            Capability.Pause,
-            Capability.Stop,
-            Capability.SkipToNext,
-            Capability.SkipToPrevious,
-        ],
 
-        playIcon: require("../assets/icons/play-pause.png"),
-        pauseIcon: require("../assets/icons/play-pause.png"),
-        stopIcon: require("../assets/icons/stop.png"),
-        previousIcon: require("../assets/icons/skip-previous.png"),
-        nextIcon: require("../assets/icons/skip-next.png"),
 
-        android: {
-            appKilledPlaybackBehavior: AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
-            
-        },
-  })});
 
   useEffect(() => {
     function deepLinkHandler(data: { url: string }) {

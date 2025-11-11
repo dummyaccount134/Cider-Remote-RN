@@ -8,12 +8,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { atom, getDefaultStore } from "jotai";
 import { io, Socket } from "socket.io-client";
 import {
-  getCastStatus,
   getNowPlayingItem,
   playbackState,
   repeatMode,
   shuffleMode,
   UpdateNotification,
+  UpdateNotificationMinimal,
   volume
 } from "./playback-control";
 import { fetchQueue } from "./queue";
@@ -43,8 +43,6 @@ export class IOState {
     const duration = get(IOState.duration);
     return (progress / duration) * 100;
   });
-
-  static isCasting = atom<boolean>(false);
 
   static async load() {
     const apiToken = await AsyncStorage.getItem("apiToken");
@@ -121,6 +119,7 @@ export class IOState {
         IOState.store.set(IOState.progress, data.currentPlaybackTime);
         IOState.store.set(IOState.duration, data.currentPlaybackDuration);
         IOState.store.set(playbackState, data.isPlaying ? "playing" : "paused");
+        UpdateNotificationMinimal(data.currentPlaybackTime);
         break;
       }
       case "playbackStatus.nowPlayingItemDidChange":
@@ -128,7 +127,7 @@ export class IOState {
         console.log(msg);
         fetchQueue();
         try{
-          UpdateNotification(msg.data, IOState.store.get(IOState.isCasting));
+          UpdateNotification(msg.data);
         } catch (e) {
           console.error("Error handling nowPlayingItemDidChange.changeNotification:", e);
         }
@@ -136,6 +135,7 @@ export class IOState {
       case "playbackStatus.playbackStateDidChange": {
         const data = msg.data as PlaybackStateDidChange;
         IOState.store.set(playbackState, data.state);
+        UpdateNotificationMinimal();
         break;
       }
       case "playerStatus.repeatModeDidChange": {
@@ -153,17 +153,9 @@ export class IOState {
         IOState.store.set(volume, parseFloat(data.toFixed(2)));
         break;
       }
-      case "castStatus": {
-        const data = msg.data as boolean;
-        IOState.store.set(IOState.isCasting, data);
-        UpdateNotification(null, data);
-        getCastStatus();
-
-        break;
-      }
       case "playbackStatus.nowPlayingStatusDidChange": {
         try{
-          UpdateNotification(null, IOState.store.get(IOState.isCasting));
+          UpdateNotification(null);
         } catch (e) {
           console.error("Error handling nowPlayingStatusDidChange.changeNotification:", e);
         }

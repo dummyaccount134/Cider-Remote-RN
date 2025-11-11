@@ -1,4 +1,4 @@
-import { getVolume, isCasting, setVolume, toggleCast, volume as volumeAtom } from "@/lib/playback-control";
+import { getVolume, setVolume, volume as volumeAtom } from "@/lib/playback-control";
 import Slider from "@react-native-community/slider";
 import { useAtomValue } from "jotai";
 import { useCallback, useEffect, useState } from "react";
@@ -46,13 +46,13 @@ export function VolumeBar() {
 
   return (
     <View style={styles.container}>
-      <IconButton
+      {/* <IconButton
         icon={useAtomValue(isCasting) ? "cellphone-sound" : "speaker-wireless"}
         size={24}
         onPress={
           toggleCast.bind(null, !useAtomValue(isCasting))
         }
-      />
+      /> */}
       <IconButton
         icon={getVolumeIcon()}
         size={24}
