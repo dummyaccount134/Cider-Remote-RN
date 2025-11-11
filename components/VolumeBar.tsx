@@ -46,13 +46,6 @@ export function VolumeBar() {
 
   return (
     <View style={styles.container}>
-      {/* <IconButton
-        icon={useAtomValue(isCasting) ? "cellphone-sound" : "speaker-wireless"}
-        size={24}
-        onPress={
-          toggleCast.bind(null, !useAtomValue(isCasting))
-        }
-      /> */}
       <IconButton
         icon={getVolumeIcon()}
         size={24}
