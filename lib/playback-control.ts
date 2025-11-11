@@ -47,6 +47,7 @@ export async function UpdateNotificationMinimal(elapsedTime?: number, playState?
   try {
         let lastTime = store.get(lastElapsedTime);
         let targetElapsedTime = elapsedTime ? elapsedTime : (IOState.store.get(IOState.progress) || lastTime || 0);
+        // console.log("Updating notification elapsed time to:", targetElapsedTime);
         // Update only if the target elapsed time > 1.5 seconds different from last elapsed time
         
         if (Math.abs(targetElapsedTime - lastTime) < 1.5) {
@@ -81,7 +82,7 @@ export async function UpdateNotification (data : any = null) {
             album: nowPlaying?.albumName,
             artwork: nowPlaying?.artwork?.url ? formatArtworkUrl(nowPlaying?.artwork?.url, {width: 512, height: 512}) : undefined,
             duration: nowPlaying?.durationInMillis ? Math.round(nowPlaying?.durationInMillis) / 1000 : undefined, // in seconds
-            elapsedTime: nowPlaying?.currentPlaybackTime ? Math.round(nowPlaying?.currentPlaybackTime) : undefined, // in seconds
+            elapsedTime: nowPlaying?.currentPlaybackTime ? Math.round(nowPlaying?.currentPlaybackTime) : IOState.store.get(IOState.progress), // in seconds
             isPlaying: store.get(isPlaying),
         };
 

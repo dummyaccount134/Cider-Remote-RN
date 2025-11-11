@@ -2,39 +2,60 @@ import { Roboto_400Regular, Roboto_500Medium, Roboto_700Bold, Roboto_900Black, u
 import { RobotoFlex_400Regular, useFonts as useRobotoFlexFonts } from "@expo-google-fonts/roboto-flex";
 import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { router, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 
 import { safeMaterialYouChecker, useMaterialYouTheme } from "@/hooks/useMaterialYouTheme";
+import { nextTrack, playPause, previousTrack, seekTo, UpdateNotification } from "@/lib/playback-control";
 import { MaterialYouService } from "@assembless/react-native-material-you";
-import { createAudioPlayer } from "expo-audio";
-import * as Linking from 'expo-linking';
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import MusicControl, { Command } from "react-native-music-control";
 import { PaperProvider } from "react-native-paper";
 import { configureReanimatedLogger } from "react-native-reanimated";
+
+
+
 
 configureReanimatedLogger({
   strict: false, // Reanimated runs in strict mode by default
 });
+
 function ThemedProviders() {
   const { paperTheme, navTheme } = useMaterialYouTheme();
 
-
-
   useEffect(() => {
-    function deepLinkHandler(data: { url: string }) {
-      console.log('deepLinkHandler', data.url);
-      // Navigate to Now Playing screen when notification is clicked
-      router.navigate('/modals/now-playing');
+    MusicControl.enableBackgroundMode(true);
 
-    }
-    const subscription = Linking.addEventListener('url', deepLinkHandler);
+    MusicControl.handleAudioInterruptions(false);
 
-    return () => {
-      subscription.remove();
-    };
+    MusicControl.enableControl("play", true);
+    MusicControl.enableControl("pause", true);
+    MusicControl.enableControl("nextTrack", true);
+    MusicControl.enableControl("previousTrack", true);
+
+    // Changing track position on lockscreen
+    MusicControl.enableControl("changePlaybackPosition", true);
+    MusicControl.enableControl("seek", true);
+    MusicControl.on(Command.play, ()=> {
+        try {playPause().then(() => UpdateNotification(null))} catch (e) {console.error(e)}})
+    MusicControl.on(Command.pause, ()=> {
+        try {playPause().then(() => UpdateNotification(null))} catch (e) {console.error(e)}})
+    MusicControl.on(Command.nextTrack, ()=> {
+        try {nextTrack().then(() => UpdateNotification(null))} catch (e) {console.error(e)}})
+    MusicControl.on(Command.previousTrack, ()=> {
+        try {previousTrack().then(() => UpdateNotification(null))} catch (e) {console.error(e)}})
+    MusicControl.on(Command.seek, (pos)=> {
+        try {
+          seekTo(pos);
+          MusicControl.updatePlayback({
+              elapsedTime: pos,
+          });
+        } catch (e) {
+          console.error(e);
+        }
+    });
   }, []);
 
   return (
@@ -103,12 +124,6 @@ function ThemedProviders() {
     </PaperProvider>
   );
 }
-
-
-
-
-
-export let audioPlayer = createAudioPlayer(undefined, 50 );
 
 export default function RootLayout() {
   const [localLoaded] = useFonts({

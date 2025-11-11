@@ -1,7 +1,7 @@
 {
   "name": "cider-remote-app",
   "version": "1.0.0",
-  "main": "app/newentry.js",
+  "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",

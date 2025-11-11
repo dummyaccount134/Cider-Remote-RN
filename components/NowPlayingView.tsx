@@ -25,13 +25,21 @@ export function NowPlayingView() {
 
   useEffect(() => {
     const task = async ()=> {
-    await UpdateNotification();
+      try {
+        await UpdateNotification();
+      } catch (e) {
+        console.error("Error updating notification:", e);
+      }
     };
     task();
   }, []);
 
   useEffect(() => {
-    UpdateNotification(null);
+    try {
+      UpdateNotification(null);
+    } catch (e) {
+      console.error("Error updating notification:", e);
+    }
   }, [isPlayingB]);
 
 

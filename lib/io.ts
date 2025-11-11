@@ -120,11 +120,19 @@ export class IOState {
         IOState.store.set(IOState.progress, data.currentPlaybackTime);
         IOState.store.set(IOState.duration, data.currentPlaybackDuration);
         IOState.store.set(playbackState, data.isPlaying ? "playing" : "paused");
-        UpdateNotificationMinimal(data.currentPlaybackTime, data.isPlaying ? "playing" : "paused");
+        try{
+          UpdateNotificationMinimal(data.currentPlaybackTime, data.isPlaying ? "playing" : "paused");
+        } catch (e) {
+          console.error("Error handling playbackTimeDidChange.changeNotification:", e);
+        }
         break;
       }
       case "playbackStatus.nowPlayingItemDidChange":
-        resetElapsedTime();
+        try{
+          resetElapsedTime();
+        } catch (e) {
+          console.error("Error resetting elapsed time on nowPlayingItemDidChange:", e);
+        }
         getNowPlayingItem();
         console.log(msg);
         fetchQueue();
@@ -137,8 +145,12 @@ export class IOState {
       case "playbackStatus.playbackStateDidChange": {
         const data = msg.data as PlaybackStateDidChange;
         IOState.store.set(playbackState, data.state);
-        resetElapsedTime();
-        UpdateNotificationMinimal(undefined, data.state);
+        try{
+          resetElapsedTime();
+          UpdateNotificationMinimal(undefined, data.state);
+        } catch (e) {
+          console.error("Error handling playbackStateDidChange.changeNotification:", e);
+        }
         break;
       }
       case "playerStatus.repeatModeDidChange": {
