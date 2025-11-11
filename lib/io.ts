@@ -120,7 +120,7 @@ export class IOState {
         IOState.store.set(IOState.progress, data.currentPlaybackTime);
         IOState.store.set(IOState.duration, data.currentPlaybackDuration);
         IOState.store.set(playbackState, data.isPlaying ? "playing" : "paused");
-        UpdateNotificationMinimal(IOState.store.get(IOState.progress));
+        UpdateNotificationMinimal(data.currentPlaybackTime, data.isPlaying ? "playing" : "paused");
         break;
       }
       case "playbackStatus.nowPlayingItemDidChange":
@@ -138,6 +138,7 @@ export class IOState {
         const data = msg.data as PlaybackStateDidChange;
         IOState.store.set(playbackState, data.state);
         resetElapsedTime();
+        UpdateNotificationMinimal(undefined, data.state);
         break;
       }
       case "playerStatus.repeatModeDidChange": {

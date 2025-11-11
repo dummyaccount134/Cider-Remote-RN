@@ -15,13 +15,13 @@ import MusicControl, { Command } from "react-native-music-control";
   MusicControl.enableControl("changePlaybackPosition", true);
   MusicControl.enableControl("seek", true);
   MusicControl.on(Command.play, ()=> {
-    try {playPause(); UpdateNotification(null)} catch (e) {console.error(e)}})
+    try {playPause().then(() => UpdateNotification(null))} catch (e) {console.error(e)}})
   MusicControl.on(Command.pause, ()=> {
-    try {playPause(); UpdateNotification(null)} catch (e) {console.error(e)}})
+    try {playPause().then(() => UpdateNotification(null))} catch (e) {console.error(e)}})
   MusicControl.on(Command.nextTrack, ()=> {
-    try {nextTrack(); UpdateNotification(null)} catch (e) {console.error(e)}})
+    try {nextTrack().then(() => UpdateNotification(null))} catch (e) {console.error(e)}})
   MusicControl.on(Command.previousTrack, ()=> {
-    try {previousTrack(); UpdateNotification(null)} catch (e) {console.error(e)}})
+    try {previousTrack().then(() => UpdateNotification(null))} catch (e) {console.error(e)}})
   MusicControl.on(Command.seek, (pos)=> {
     try {
       seekTo(pos);

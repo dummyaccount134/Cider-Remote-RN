@@ -43,17 +43,18 @@ export function resetElapsedTime() {
 }
 
 
-export async function UpdateNotificationMinimal(elapsedTime?: number) {
+export async function UpdateNotificationMinimal(elapsedTime?: number, playState?: PlaybackStates) {
   try {
-        let targetElapsedTime = elapsedTime ? elapsedTime : (IOState.store.get(IOState.progress) || 0);
-        // Update only if the target elapsed time > 1.5 seconds different from last elapsed time
         let lastTime = store.get(lastElapsedTime);
+        let targetElapsedTime = elapsedTime ? elapsedTime : (IOState.store.get(IOState.progress) || lastTime || 0);
+        // Update only if the target elapsed time > 1.5 seconds different from last elapsed time
+        
         if (Math.abs(targetElapsedTime - lastTime) < 1.5) {
             return;
         }
         store.set(lastElapsedTime, targetElapsedTime);
         MusicControl.updatePlayback({
-          state: store.get(isPlaying) ? MusicControl.STATE_PLAYING : MusicControl.STATE_PAUSED,
+          state: playState ? (playState === "playing" ? MusicControl.STATE_PLAYING : MusicControl.STATE_PAUSED) : (store.get(isPlaying) ? MusicControl.STATE_PLAYING : MusicControl.STATE_PAUSED),
           elapsedTime: targetElapsedTime ,
         });
     } catch (e) {
