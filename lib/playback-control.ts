@@ -10,6 +10,7 @@ const store = getDefaultStore();
 
 export const nowPlayingItem = atom<NowPlayingInfo | null>(null);
 export const playbackState = atom<PlaybackStates>("stopped");
+export const lastElapsedTime = atom<number>(-2);
 export const isPlaying = atom((get) => get(playbackState) === "playing");
 export const volume = atom(1);
 export const shuffleMode = atom(0);
@@ -37,12 +38,23 @@ export async function getNowPlayingItem() {
   store.set(shuffleMode, res.info.shuffleMode);
 }
 
+export function resetElapsedTime() {
+  store.set(lastElapsedTime, -2);
+}
+
 
 export async function UpdateNotificationMinimal(elapsedTime?: number) {
   try {
+        let targetElapsedTime = elapsedTime ? elapsedTime : (IOState.store.get(IOState.progress) || 0);
+        // Update only if the target elapsed time > 1.5 seconds different from last elapsed time
+        let lastTime = store.get(lastElapsedTime);
+        if (Math.abs(targetElapsedTime - lastTime) < 1500) {
+            return;
+        }
+        store.set(lastElapsedTime, targetElapsedTime);
         MusicControl.updatePlayback({
           state: store.get(isPlaying) ? MusicControl.STATE_PLAYING : MusicControl.STATE_PAUSED,
-          elapsedTime: elapsedTime ? elapsedTime : (IOState.store.get(IOState.progress) || 0),
+          elapsedTime: targetElapsedTime / 1000,
         });
     } catch (e) {
         console.error("Error updating notification elapsed time:", e);
